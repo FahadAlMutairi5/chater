@@ -16,6 +16,7 @@ class ViewChannel extends Component {
   state = {
     channel:{},
     message:null,
+    notification: false,
   }
   async componentDidMount(){
     
@@ -52,18 +53,28 @@ class ViewChannel extends Component {
           ),
         3000
       );
+
     }
     }
     if (this.props.messages.length > 1){
     if(prevProps.messages.length !== this.props.messages.length){
-     this.goDown(); 
+     this.goDown();
     }
     }
-    
+    if (prevProps.match.params.channelId === this.props.match.params.channelId && prevProps.messages.length !== this.props.messages.length){
+        let newMessages = this.props.newMessages
+        if (newMessages.length >= 1){
+          newMessages.forEach(message => 
+                  message.username !== this.props.user.username && this.props.addNotification(message.username, message.message)
+            )
+        }
+        
+    }
   }
   componentWillUnmount(){
     clearInterval(this.timer);
   }
+  
   goDown(){
     let lastId = this.props.messages[this.props.messages.length-1].id;
     let element = document.getElementById(String(lastId));
@@ -149,7 +160,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getMessages: (channelId) => dispatch(actionCreators.fetchMessages(channelId)),
     sendMessage: (channelId,message) => dispatch(actionCreators.sendMessage(channelId,message)),
-    getMessagesTimeStamp:(channelId,timeStamp) => dispatch(actionCreators.getMessagesTimeStamp(channelId,timeStamp))
+    getMessagesTimeStamp:(channelId,timeStamp) => dispatch(actionCreators.getMessagesTimeStamp(channelId,timeStamp)),
   };
 };
 const mapStateToProps = state => {
@@ -157,7 +168,8 @@ const mapStateToProps = state => {
     user: state.auth.user,  
     channels: state.channels.channels,
     messages: state.mess.masseges, 
-    loading:state.mess.loading, 
+    loading:state.mess.loading,
+    newMessages:state.mess.newMessages, 
   };
 };
 export default connect(mapStateToProps,mapDispatchToProps)(ViewChannel);

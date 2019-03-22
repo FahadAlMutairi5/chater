@@ -25,6 +25,9 @@ export const fetchMessages = (channelId) => {
 const setLoading = () => ({
   type: actionTypes.SET_MESSAGES_LOADING
 });
+const setNotification = () => ({
+  type: actionTypes.SET_MESSAGES_NOTIFICATION 
+})
 export const getMessagesTimeStamp = (channelId,timeStamp) => {
   return async dispatch => {
     try {

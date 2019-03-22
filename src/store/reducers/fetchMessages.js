@@ -3,7 +3,7 @@ import * as actionTypes from "../actions/actionTypes";
 const initialState = {
   masseges:[],
   loading:true,
-  newMessages:false,
+  newMessages:[],
 };
 
 const reducer = (state = initialState, action) => {
@@ -19,7 +19,8 @@ const reducer = (state = initialState, action) => {
         return {
         ...state,
         masseges: state.masseges.concat(action.payload),
-        newMessages:true
+        newMessages:action.payload
+
       };
       }
       return {
@@ -31,6 +32,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: true
       };
+      
       default:
       return state;
   }

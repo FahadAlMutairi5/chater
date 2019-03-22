@@ -18,10 +18,10 @@ class App extends Component {
     this.addNotification = this.addNotification.bind(this);
     this.notificationDOMRef = React.createRef();
   }
-  addNotification() {
+  addNotification(name,msssg) {
     this.notificationDOMRef.current.addNotification({
-      title: "Awesomeness",
-      message: "Awesome Notifications!",
+      title: `${name}`,
+      message: `${msssg}`,
       type: "success",
       insert: "top",
       container: "top-right",
@@ -34,13 +34,7 @@ class App extends Component {
   componentDidMount() {
     this.props.checkForExpiredToken();
   }
-  // setInterval(
-  //       () => this.props.newMessages &&this.addNotification()
-  //       ,
-  //       1000
-  //     );
   render() {
-    
     return (
       <div className="container my-5">
         <ReactNotification ref={this.notificationDOMRef} />
@@ -48,7 +42,7 @@ class App extends Component {
           <UserAccount/>
           <Switch>
               <Route path="/ListChannels" component={ListChannels} />
-              <Route path="/channel/:channelName/:channelId" component={ViewChannel}/>
+              <Route path="/channel/:channelName/:channelId" render={(props) => <ViewChannel {...props} addNotification={(name,msssg)=>this.addNotification(name,msssg)}/>}/>
               <Route path="/Login" component={Login}/>
               <Route path="/SingUp" component={SingUp}/>
               <Route path="/CreateChannel" component={CreateChannel}/>
