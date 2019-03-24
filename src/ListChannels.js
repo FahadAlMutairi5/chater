@@ -4,41 +4,20 @@ import Channel from "./Channel";
 import Loading from './Loading';
 import GoodBye from './GoodBye';
 import * as actionCreators from "./store/actions";
-//import axios from "axios";
-
     /* -- get List of all channels component -- */
-
 class ListChannels extends Component {
   async componentDidMount() {
      if (this.props.user){
       await this.props.fetchChannels() //fetch all Channels from API
-      /* -- try to do notification of all channels in app  -- */
-    //   let setIntervals = [];
-    //   const message = []; 
-    // if (this.props.channels.length >=1){
-    //     const channels = this.props.channels; 
-    //    channels.forEach( chaannel => {
-    //       let prom = this.props.fetchMessagesNoti(chaannel.id)
-    //       console.log("*********************")
-    //       console.log(prom);
-    //   });
-    // }
-  }
-  }
-      /* -- on Update componint -- */
-  componentDidUpdate(){
-  
-  }
+  }}  
       /* -- get all Channel component -- */
   getChannels = () => {
     return this.props.filteredChannels.map(channel => (
       <Channel key={channel.id} channel={channel} />
-    ));
-    
+    ));    
   }
   render() {
     const channels = this.getChannels();
-
     if (this.props.user){
       return (
         <div className="animated slideInRight col-6 my-3 shadow rounded text-center" style={{backgroundColor:"rgba(170,175,179,0.4)"}}>
@@ -71,8 +50,7 @@ class ListChannels extends Component {
       return (
         <GoodBye/>
       );
-    }
-    
+    }  
   }
 }
 const mapStateToProps = state => {

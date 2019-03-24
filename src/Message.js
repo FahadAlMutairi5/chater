@@ -6,7 +6,6 @@ class Message extends Component {
   
   render() {
     const messageObj = this.props.message;
-    //2019-03-16T06:32:21.997461Z
     let timestampObj = messageObj.timestamp;
     const time = timestampObj.slice(11, 16);
     return (

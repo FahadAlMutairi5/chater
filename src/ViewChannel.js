@@ -17,7 +17,7 @@ class ViewChannel extends Component {
     message:null,
     playedNotifcS: false,
   }
-          /* -- Initial --*/
+     /* -- Initial --*/
   async componentDidMount(){
       /* -- get all messages -- */
     await this.getMessages()
@@ -27,7 +27,7 @@ class ViewChannel extends Component {
         this.getMessagesTimeStamp(
           this.props.match.params.channelId,
           this.props.messages[this.props.messages.length-1].timestamp
-          ),3000
+          ),1000
     );
     }
           /* -- get this channel -- */
@@ -54,7 +54,7 @@ class ViewChannel extends Component {
           this.props.match.params.channelId,
           this.props.messages[this.props.messages.length-1].timestamp
           ),
-        3000
+        1000
       );
 
     }

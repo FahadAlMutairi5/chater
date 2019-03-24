@@ -15,14 +15,11 @@ import GoodBye from "./GoodBye";
 import Home from "./Home";
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.addNotification = this.addNotification.bind(this);
     this.notificationDOMRef = React.createRef();
-
   }
-
   addNotification(name,msssg) {
     this.notificationDOMRef.current.addNotification({
       title: `${name}`,
@@ -32,42 +29,19 @@ class App extends Component {
       container: "top-right",
       animationIn: ["animated", "fadeIn"],
       animationOut: ["animated", "fadeOut"],
-      dismiss: { duration: 2000 },
+      dismiss: { duration: 5000 },
       dismissable: { click: true }
     });
   }
-  // async getLastMessage(channelId){
-  //   let allMessages = await this.props.getMessages(channelId);
-  //         /* -- Test get Last Messages -- */
-  //   //if (allMessages.length >= 1){
-  //     //let lastMessage = allMessages[allMessages.length-1];
-  //   //console.log(lastMessage);
-  //   //let allNewMessages = this.props.getMessagesTimeStamp(channelId,lastMessage);
   
-  //   //}
-  // }
   async componentDidMount() {
-
-    this.props.checkForExpiredToken();
-      /* -- Test Intervals -- */
-    //await this.props.fetchChannelsNotification();
-    
+    this.props.checkForExpiredToken();  
   }
   componentWillUnmount(){
     /*This will run after unmount commponnt*/
     let setIntervals = this.state.setIntervals;
     setIntervals.forEach(interval => clearInterval(interval))
   }
-  /* -- Test Notification -- */
-  // getNotif(){
-  //   let newMessages = this.props.newMessages
-  //       if (newMessages.length >= 1){
-  //         this.props.resetNotification()
-  //         newMessages.forEach(message => 
-  //                 message.username !== this.props.user.username && this.props.addNotification(message.username, message.message)
-  //           )
-  //       }
-  // }
   render() {
     if (this.props.channelsNotification.length >= 1){
       console.log(this.props.channelsNotification)

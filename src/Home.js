@@ -7,7 +7,7 @@ class Home extends Component {
     return (
       <div className="animated slideInRight col-6 my-3 shadow rounded text-center" style={{backgroundColor:"rgba(170,175,179,0.4)"}}>
           <br/><br/>
-          <div className="col-12 text-center" style={{height: "28rem"}}>
+          <div className="col-12 text-center" style={{height: "23rem"}}>
             <div className="animated rotateIn delay-1s mt-5 col-12">
               <img style={{width:"20rem"}} src={logo} className="rounded" alt="..."/>
             </div>
