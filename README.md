@@ -3,6 +3,5 @@
 ## Chater
 
 ### `Demo`
-Demo of this app<br>
-[chater](https://chater.netlify.com/)
+Demo of this app [chater](https://chater.netlify.com/)
 
