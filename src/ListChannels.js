@@ -1,19 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Channel from "./Channel";
-import ReactLoading from 'react-loading';
-import logo from './assets/fat.png';
-import Home from './Home';
+import Loading from './Loading';
+import GoodBye from './GoodBye';
 import * as actionCreators from "./store/actions";
+//import axios from "axios";
+
+    /* -- get List of all channels component -- */
 
 class ListChannels extends Component {
-  componentDidMount() {
-    this.props.fetchChannels()
+  async componentDidMount() {
+     if (this.props.user){
+      await this.props.fetchChannels() //fetch all Channels from API
+      /* -- try to do notification of all channels in app  -- */
+    //   let setIntervals = [];
+    //   const message = []; 
+    // if (this.props.channels.length >=1){
+    //     const channels = this.props.channels; 
+    //    channels.forEach( chaannel => {
+    //       let prom = this.props.fetchMessagesNoti(chaannel.id)
+    //       console.log("*********************")
+    //       console.log(prom);
+    //   });
+    // }
   }
+  }
+      /* -- on Update componint -- */
   componentDidUpdate(){
-
-  }
   
+  }
+      /* -- get all Channel component -- */
   getChannels = () => {
     return this.props.filteredChannels.map(channel => (
       <Channel key={channel.id} channel={channel} />
@@ -22,6 +38,7 @@ class ListChannels extends Component {
   }
   render() {
     const channels = this.getChannels();
+
     if (this.props.user){
       return (
         <div className="animated slideInRight col-6 my-3 shadow rounded text-center" style={{backgroundColor:"rgba(170,175,179,0.4)"}}>
@@ -42,7 +59,7 @@ class ListChannels extends Component {
             <div className="col-6 offset-3">  
             <div className="spinner mx-auto text-center">
             <br/><br/><br/><br/>
-            <ReactLoading type={"cylon"} color={"black"} height={367} width={175} />
+            <Loading/>
             </div>
             </div> :
              channels
@@ -52,7 +69,7 @@ class ListChannels extends Component {
     );
     }else{
       return (
-        <Home/>
+        <GoodBye/>
       );
     }
     
@@ -61,7 +78,9 @@ class ListChannels extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user, 
+    channels: state.channels.channels,
     filteredChannels: state.channels.filteredChannels,
+    messages: state.mess.masseges, 
     loading:state.channels.loading, 
   };
 };
@@ -69,6 +88,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onSearch: query => dispatch(actionCreators.filterChannels(query.toLowerCase())),
     fetchChannels: () => dispatch(actionCreators.fetchChannels()),
+    fetchMessagesNoti:(channelId) => dispatch(actionCreators.fetchMessagesNoti(channelId)),
   };
 };
 export default connect(mapStateToProps,mapDispatchToProps)(ListChannels);

@@ -4,24 +4,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import Messages from './Message';
 import * as actionCreators from "./store/actions";
-import {withRouter} from 'react-router-dom'
-import {slugify} from './utils/slugify';
-import unslug from 'unslug';
 import { Link } from "react-router-dom";
-import ReactLoading from 'react-loading';
-import Home from './Home';
+import Loading from './Loading';
+import GoodBye from './GoodBye';
+import Sound from "react-sound";
+import soundFileMP3 from "./assets/toThePoint.mp3";
 
 class ViewChannel extends Component {
   timer = "";
   state = {
     channel:{},
     message:null,
-    notification: false,
+    playedNotifcS: false,
   }
+          /* -- Initial --*/
   async componentDidMount(){
-    
+      /* -- get all messages -- */
     await this.getMessages()
-    const messages = this.props.messages
     if (this.props.messages.length !== 0){
       this.timer = setInterval(
       () =>
@@ -31,17 +30,21 @@ class ViewChannel extends Component {
           ),3000
     );
     }
+          /* -- get this channel -- */
     const channel = this.getChannel();
     this.setState({channel:channel})
     if(!this.props.loading){
       if (this.props.messages.length > 1){
+                  /* -- Scroall on open channel -- */
       let lastId = this.props.messages[this.props.messages.length-1].id;
       let element = document.getElementById(String(lastId));
       element.scrollIntoView({behavior: "auto"});
       }
     }
   } 
+              /* -- Update --*/
   componentDidUpdate(prevProps){
+                      /* -- Set Inrerval of lass messages -- */
     if (prevProps.match.params.channelId !== this.props.match.params.channelId){
       if (this.props.messages.length !== 0){
       clearInterval(this.timer);
@@ -58,35 +61,63 @@ class ViewChannel extends Component {
     }
     if (this.props.messages.length > 1){
     if(prevProps.messages.length !== this.props.messages.length){
+              /* -- go down to last messages  -- */
      this.goDown();
     }
     }
-    if (prevProps.match.params.channelId === this.props.match.params.channelId && prevProps.messages.length !== this.props.messages.length){
+                  /* -- set notification to new messages  -- */
+    if (prevProps.match.params.channelId === this.props.match.params.channelId 
+      && prevProps.messages.length !== this.props.messages.length){
         let newMessages = this.props.newMessages
+        this.props.resetNotification() //resat all last notifaction to add new one
         if (newMessages.length >= 1){
-          newMessages.forEach(message => 
-                  message.username !== this.props.user.username && this.props.addNotification(message.username, message.message)
-            )
+          newMessages.forEach(message =>{
+              if (message.username !== this.props.user.username) {
+                  this.setState({playedNotifcS:true})
+                  this.props.addNotification(message.username, message.message);
+              }
+
+          })
         }
         
     }
   }
+  /* -- sound function to new message -- */
+  sound = () => {
+    return (
+      <Sound
+        url={soundFileMP3}
+        playStatus={Sound.status.PLAYING}
+        autoLoad={true}
+        autoPlay={true}
+        onError={(errorCode, description) => {
+          console.log("sound error: ", description);
+        }}
+        onFinishedPlaying={this.togglePlay}
+      />
+    );
+  };
+  togglePlay = () => this.setState({ playedNotifcS: false }); //resat sound off
+    /* -- after go from channel -- */
   componentWillUnmount(){
     clearInterval(this.timer);
   }
-  
+    /* -- go to last elemant of new messages -- */
   goDown(){
     let lastId = this.props.messages[this.props.messages.length-1].id;
     let element = document.getElementById(String(lastId));
     element.scrollIntoView({behavior: "smooth"});
   }
+    /* -- get last message by time stamp -- */
   getMessagesTimeStamp(channelId,timeStamp){
     this.props.getMessagesTimeStamp(channelId,timeStamp)
   }
+    /* -- fitch all messages  -- */
   async getMessages(channelId) {
     await this.props.getMessages(this.props.match.params.channelId)
     this.setState({lenghtM:this.props.messages.length})
   }
+    /* -- faind channel by id  -- */
   getChannel = () => {
     let channel={};
     if(this.props.channels.length !== 0){
@@ -94,6 +125,7 @@ class ViewChannel extends Component {
     }
     return channel ;
   }
+    /* -- get all messages commponint -- */
   getMessage = () => {
     return (
     this.props.messages.map((message) => (
@@ -101,6 +133,7 @@ class ViewChannel extends Component {
     ))
     )
   }
+      /* -- send new message -- */
   handleKeyPress = event => {
     if (event.key === 'Enter'){
       const message = {message:this.state.message}
@@ -108,6 +141,7 @@ class ViewChannel extends Component {
       this.setState({message:""})
     }
   };
+      /* -- add message to state -- */
   setMessage = event => {
     this.setState({message:event.target.value}) 
   }
@@ -132,17 +166,18 @@ class ViewChannel extends Component {
           </div>
           <hr className="border border-light"/>
           {!this.props.loading ?
-            <div className="col-12" style={{height: "25rem",  overflowX: "hidden", overflowY: "scroll"}}> 
+            <div className="col-12" style={{height: "23rem",  overflowX: "hidden", overflowY: "scroll"}}> 
               {this.getMessage()}
             </div> 
             : 
             <div className="col-6 offset-3">  
               <div className="spinner mx-auto text-center" style={{height: "25rem",  overflowX: "hidden", overflowY: "scroll"}}>
                 <br/><br/><br/><br/>
-                <ReactLoading type={"cylon"} color={"black"} height={367} width={175} />
-              </div>
+                <Loading/>
+                </div>
             </div>
           }
+          {this.state.playedNotifcS && this.sound()}
           <hr/>
           <div className="col-12">
               <input type="text" className="form-control mb-2" placeholder= {!this.props.loading  && `message  ${this.state.channel.name}`} value={this.state.message} onKeyPress={this.handleKeyPress} onChange={this.setMessage}/>
@@ -151,7 +186,7 @@ class ViewChannel extends Component {
       );
     }else{
       return (
-        <Home/>
+        <GoodBye/>
       );
     }
   }
@@ -161,6 +196,7 @@ const mapDispatchToProps = dispatch => {
     getMessages: (channelId) => dispatch(actionCreators.fetchMessages(channelId)),
     sendMessage: (channelId,message) => dispatch(actionCreators.sendMessage(channelId,message)),
     getMessagesTimeStamp:(channelId,timeStamp) => dispatch(actionCreators.getMessagesTimeStamp(channelId,timeStamp)),
+    resetNotification: () => dispatch(actionCreators.resetNotification()),
   };
 };
 const mapStateToProps = state => {

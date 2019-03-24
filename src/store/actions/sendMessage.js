@@ -5,7 +5,7 @@ const instance = axios.create({
           //http://private-chatr.herokuapp.com/
   baseURL: "https://api-chatr.herokuapp.com/"
 });
-
+        /* -- send messages to api -- */
 export const sendMessage = (channelId,message) => {
   return async dispatch => {
     try {

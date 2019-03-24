@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import {slugify} from './utils/slugify'
-
+    
+     /* -- return channel -- */
 class Channel extends Component {
   
   render() {

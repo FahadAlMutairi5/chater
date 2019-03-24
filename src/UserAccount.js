@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import logo from './assets/fat.png';
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faUser} from "@fortawesome/free-solid-svg-icons";
+import {faUser , faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import * as actionCreators from "./store/actions";
 import { Link } from "react-router-dom";
 
+    /* -- get User accoutn -- */
 class UserAccount extends Component {
+      /* -- if user logid in  -- */
   getUserProf(){
     return (
       <div>
@@ -16,13 +18,14 @@ class UserAccount extends Component {
           <h4 className="text-warning text-center mt-2">{this.props.user.username}</h4>
       </div>
       <Link to="/CreateChannel" className="col-12 border mt-2 text-center bg-dark border-info rounded-pill btn btn-dark">
-          <span className="text-warning text-center" style={{fontSize:"15px"}}>Create Channel</span>
+          <span className="text-warning text-center" style={{fontSize:"15px"}}> <FontAwesomeIcon  icon={faPlusCircle} /> Channel</span>
       </Link>
       <br/><br/><br/><br/><br/>
       <button onClick={()=>this.props.logout()} className="col-12 border text-danger font-weight-bold border-danger rounded-pill  btn btn-dark" >Logout</button>
       </div>
     )
   }
+      /* -- if user logout -- */
   getLoginSingup(){
     return(
       <div>

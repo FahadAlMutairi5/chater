@@ -2,6 +2,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 import * as actionTypes from "./actionTypes";
+// import { setErrors } from "./errors";
 
 
 const instance = axios.create({
@@ -9,7 +10,7 @@ const instance = axios.create({
             //http://private-chatr.herokuapp.com/
   baseURL: "https://api-chatr.herokuapp.com/"
 });
-
+        /* -- set Token to brow -- */
 const setAuthToken = token => {
   if (token) {
     localStorage.setItem("token", token);
@@ -20,7 +21,7 @@ const setAuthToken = token => {
     delete axios.defaults.headers.common.Authorization;
   }
 };
-
+        /* -- check for expired token -- */
 export const checkForExpiredToken = () => {
   return dispatch => {
     // Get token
@@ -46,7 +47,7 @@ export const checkForExpiredToken = () => {
     }
   };
 };
-
+        /* -- login from api -- */
 export const login = (userData, history) => {
   return async dispatch => {
     try {
@@ -55,13 +56,21 @@ export const login = (userData, history) => {
       let decodedUser = jwt_decode(user.token);
       setAuthToken(user.token);
       dispatch(setCurrentUser(decodedUser));
+      dispatch({
+       type: actionTypes.SET_ERRORS,
+       payload: []
+     });
       history.push("/ListChannels");
+
     } catch (error) {
-      console.error(error.response.data);
+      dispatch({
+       type: actionTypes.SET_ERRORS,
+       payload: error.response.data
+     });
     }
   };
 };
-
+        /* -- signup from api -- */
 export const signup = (userData, history) => {
   return async dispatch => {
     try {
@@ -70,8 +79,17 @@ export const signup = (userData, history) => {
       let decodedUser = jwt_decode(user.token);
       setAuthToken(user.token);
       dispatch(setCurrentUser(decodedUser));
+      dispatch({
+       type: actionTypes.SET_ERRORS,
+       payload: []
+     });
       history.push("/ListChannels");
-    } catch (error) {}
+    } catch (error) {
+      dispatch({
+       type: actionTypes.SET_ERRORS,
+       payload: error.response.data
+     });
+    }
   };
 };
 
@@ -81,7 +99,7 @@ export const logout = () => {
   setAuthToken();
   return setCurrentUser();
 };
-
+/* -- set current user to see -- */
 const setCurrentUser = user => ({
   type: actionTypes.SET_CURRENT_USER,
   payload: user

@@ -6,8 +6,10 @@ const initialState = {
   filteredChannels: [],
 };
 
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+         /* -- set channel from api -- */
     case actionTypes.SET_CHANNELS:
       return {
         ...state,
@@ -15,11 +17,14 @@ const reducer = (state = initialState, action) => {
         filteredChannels:action.payload,
         loading:false,
       };
+          /* -- set channel from create channel form -- */
     case actionTypes.CREATE_CHANNEL:
       return {
           ...state,
          channels: state.channels.concat(action.payload),
+         filteredChannels:state.filteredChannels.concat(action.payload),
     };
+        /* -- set felter channel after res -- */
     case actionTypes.FILTER_CHANNELS:
       return {
         ...state,
@@ -29,6 +34,7 @@ const reducer = (state = initialState, action) => {
             .includes(action.payload);
       })
     };
+        /* -- set loading when fitch channel -- */
     case actionTypes.SET_CHANELS_LOADING:
       return {
         ...state,
@@ -38,6 +44,4 @@ const reducer = (state = initialState, action) => {
     return state;
   }
 };
-
-
 export default reducer;
